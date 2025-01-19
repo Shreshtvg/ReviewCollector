@@ -1,0 +1,9 @@
+fastapi==0.100.0
+uvicorn==0.23.2
+langchain==0.0.324
+pydantic==1.10.12
+httpx==0.24.1
+python-dotenv==1.0.0
+playwright==1.30.0  # Add Playwright if not installed yet
+nest_asyncio==1.5.6  # Add nest_asyncio if you're using it in the code
+beautifulsoup4==4.11.1
