@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GoMarble Reviews Scraper</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+    h1 {
+      color: #333;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background-color: #007BFF;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .reviews {
+      margin-top: 20px;
+    }
+    .review {
+      border-bottom: 1px solid #ddd;
+      padding: 10px 0;
+    }
+    .review h3 {
+      margin: 0 0 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>GoMarble Reviews Scraper</h1>
+  <p>Enter the product page URL to extract reviews:</p>
+  <input type="text" id="urlInput" placeholder="Enter product page URL" style="width: 100%;">
+  <button onclick="fetchReviews()">Get Reviews</button>
+  <div id="reviewsContainer" class="reviews"></div>
+
+  <script>
+    async function fetchReviews() {
+      const url = document.getElementById('urlInput').value;
+      console.log(url);
+      const reviewsContainer = document.getElementById('reviewsContainer');
+      reviewsContainer.innerHTML = '<p>Loading reviews...</p>';
+
+      try {
+        const response = await fetch(`http://localhost:8000/reviews?url=${url}`);
+        console.log("hi");
+        console.log(response);
+        if (!response.ok) {
+          throw new Error('Failed to fetch reviews. Please check the URL or try again later.');
+        }
+        console.log(response);
+        const data = await response.json();
+        reviewsContainer.innerHTML = `<p>Total Reviews: ${data.reviews_count}</p>`;
+        data.reviews.forEach(review => {
+          const reviewElement = document.createElement('div');
+          reviewElement.classList.add('review');
+          reviewElement.innerHTML = `
+            <h3>${review.title || 'No Title'}</h3>
+            <p>${review.body || 'No Content'}</p>
+            <p><strong>Rating:</strong> ${review.rating || 'N/A'}</p>
+            <p><strong>Reviewer:</strong> ${review.reviewer || 'Anonymous'}</p>
+          `;
+          reviewsContainer.appendChild(reviewElement);
+        });
+      } catch (error) {
+        reviewsContainer.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+      }
+    }
+  </script>
+</body>
+</html>
